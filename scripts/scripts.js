@@ -7,7 +7,6 @@ $(document).ready(function () {
     let timerId = null;
     let startTime = 0;
     let elapsed = 0;
-    let isRunning = false;
 
     function formatTime(ms) {
         const hours = Math.floor(ms / 3600000);
@@ -22,31 +21,6 @@ $(document).ready(function () {
         elapsed = now - startTime;
         $display.text(formatTime(elapsed));
     }
-
-    $startBtn.on("click", function () {
-        if (timerId !== null) return;
-        startTime = Date.now() - elapsed;
-        timerId = setInterval(update, 100);
-        isRunning = true;
-        runningUI(isRunning);
-    });
-
-    $stopBtn.on("click", function () {
-        if (timerId === null) return;
-        clearInterval(timerId);
-        timerId = null;
-        isRunning = false;
-        notRunningUI(isRunning);
-    });
-
-    $resetBtn.on("click", function () {
-        clearInterval(timerId);
-        timerId = null;
-        elapsed = 0;
-        $display.text("0:0:0:0");
-        isRunning = false;
-        initialUI(isRunning);
-    });
 
     function runningUI() {
     $startBtn.addClass("is-disabled");
@@ -65,5 +39,29 @@ $(document).ready(function () {
     $stopBtn.addClass("is-disabled");
     $resetBtn.addClass("is-disabled");
     }
+
+    // クリックイベントの設定
+
+    $startBtn.on("click", function () {
+        if (timerId !== null) return;
+        startTime = Date.now() - elapsed;
+        timerId = setInterval(update, 100);
+        runningUI();
+    });
+
+    $stopBtn.on("click", function () {
+        if (timerId === null) return;
+        clearInterval(timerId);
+        timerId = null;
+        notRunningUI();
+    });
+
+    $resetBtn.on("click", function () {
+        clearInterval(timerId);
+        timerId = null;
+        elapsed = 0;
+        $display.text("0:0:0:0");
+        initialUI();
+    });
 
 });
